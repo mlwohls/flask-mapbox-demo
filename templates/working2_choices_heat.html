@@ -47,21 +47,14 @@
         color: #404040;
     }
 
-    #menu a.active_Family_Education {
-        background-color: rgb(0,0,255);
+    #menu a.active {
+        background-color: #3887be;
         color: #ffffff;
     }
 
-    #menu a.active_Family_Fun {
-        background-color: rgb(0,255,255);
-        color: #000000;
+    #menu a.active:hover {
+        background: #3074a4;
     }
-
-    #menu a.active_Outdoor_Nature {
-        background-color: rgb(0,102,0);
-        color: #000000;
-    }
-
 </style>
 
 <nav id="menu"></nav>
@@ -105,7 +98,6 @@ map.on('load', function () {
               "id": "family_edu-" + i,
               "type": "circle",
               "source": "family_edu",
-              "layout": {"visibility": "none"},
               "paint": {
                   "circle-color": layer[1],
                   "circle-radius": layer[2],
@@ -148,7 +140,6 @@ map.on('load', function () {
               "id": "family_fun-" + i,
               "type": "circle",
               "source": "family_fun",
-              "layout": {"visibility": "none"},
               "paint": {
                   "circle-color": layer[1],
                   "circle-radius": layer[2],
@@ -192,7 +183,6 @@ map.on('load', function () {
               "id": "outdoors-" + i,
               "type": "circle",
               "source": "outdoors",
-              "layout": {"visibility": "none"},
               "paint": {
                   "circle-color": layer[1],
                   "circle-radius": layer[2],
@@ -218,8 +208,7 @@ var groups = {'Family_Education': [ 'family_edu-0', 'family_edu-1','family_edu-2
 Object.keys(groups).forEach( function (group_key) {
   var link = document.createElement('a');
   link.href = '#';
-  link.className = ''//'active_' + group_key;
-  console.log('active_' + group_key)
+  link.className = 'active';
   link.textContent = group_key;
 
   link.onclick = function (e) {
@@ -227,7 +216,7 @@ Object.keys(groups).forEach( function (group_key) {
       e.preventDefault();
       e.stopPropagation();
 
-      if (this.className.includes('active')) {
+      if (this.className === 'active') {
         this.className = '';
 
         group_layer_id_list.forEach( function (layer_id) {
@@ -235,7 +224,7 @@ Object.keys(groups).forEach( function (group_key) {
             })
           }
 
-      else {this.className = 'active_' + group_key;
+      else {this.className = 'active';
 
             group_layer_id_list.forEach( function (layer_id) {
                     map.setLayoutProperty(layer_id, 'visibility', 'visible');
