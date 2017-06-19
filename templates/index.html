@@ -7,7 +7,7 @@
     <script src='https://api.tiles.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>
     <style>
         body { margin:0; padding:0; }
-        #map { width: 600px; height: 400px; margin-top: 50px; }
+        #map { width: 100%; height: 100%; margin-top: 0px; }
     </style>
   </head>
   <body>
@@ -25,9 +25,9 @@
     $('.submit').click(function() {
       var source = new EventSource('/process');
       source.onopen = function(){
-        console.log('connection is opened.' + source.readyState);  
+        console.log('connection is opened.' + source.readyState);
       };
-      
+
       source.onmessage = function(event) {
         var message = $('#log').html();
         $('#log').html(message + event.data);
@@ -51,4 +51,3 @@
 </script>
   </body>
 </html>
-
