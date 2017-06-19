@@ -16,30 +16,40 @@ def index():
 def choices():
     return render_template('choices.html', ACCESS_KEY=ACCESS_KEY)
 
-@app.route('/heat')
-def heat():
-    with open('sources/families.geojson', 'r') as f:
+@app.route('/heatmap/<persona>')
+def heat(persona):
+    file_name = persona.lower() + ".geojson"
+    with open('sources/'+file_name, 'r') as f:
         geo_string = f.read()
         geo_json = geojson.loads(geo_string)
     print len(geo_json)
-    return render_template('heat2.html', ACCESS_KEY=ACCESS_KEY, geo_json=geo_json)
+    return render_template('single_persona_heat.html', ACCESS_KEY=ACCESS_KEY, geo_json=geo_json)
 
-@app.route('/complex')
-def complex():
-    with open('sources/family_edu.geojson', 'r') as f:
+@app.route('/heatmap/all')
+def heatmap_all():
+    with open('sources/family_education.geojson', 'r') as f:
         geo_string = f.read()
         family_edu_geojson = geojson.loads(geo_string)
     with open('sources/family_fun.geojson', 'r') as f:
         geo_string = f.read()
         family_fun_geojson = geojson.loads(geo_string)
 
-    with open('sources/outdoors.geojson', 'r') as f:
+    with open('sources/outdoor_nature.geojson', 'r') as f:
         geo_string = f.read()
-        outdoors_geojson = geojson.loads(geo_string)
+        outdoor_nature_geojson = geojson.loads(geo_string)
+
+    with open('sources/outdoor_adventure.geojson', 'r') as f:
+        geo_string = f.read()
+        outdoor_adventure_geojson = geojson.loads(geo_string)
+    with open('sources/luxury.geojson', 'r') as f:
+        geo_string = f.read()
+        luxury_geojson = geojson.loads(geo_string)
 
 
 
-    return render_template('choices_heat.html', ACCESS_KEY=ACCESS_KEY, family_edu_geojson=family_edu_geojson,family_fun_geojson=family_fun_geojson, outdoors_geojson=outdoors_geojson)
+    return render_template('choices_heat.html', ACCESS_KEY=ACCESS_KEY, family_edu_geojson=family_edu_geojson,family_fun_geojson=family_fun_geojson,
+                            outdoor_nature_geojson=outdoor_nature_geojson, outdoor_adventure_geojson=outdoor_adventure_geojson,
+                            luxury_geojson=luxury_geojson)
 
 
 

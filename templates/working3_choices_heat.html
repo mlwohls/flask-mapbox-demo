@@ -21,7 +21,7 @@
         top: 10px;
         right: 10px;
         border-radius: 3px;
-        width: 200px;
+        width: 120px;
         border: 1px solid rgba(0,0,0,0.4);
         font-family: 'Open Sans', sans-serif;
     }
@@ -58,17 +58,7 @@
     }
 
     #menu a.active_Outdoor_Nature {
-        background-color: rgb(102, 51, 0);
-        color: #ffffff;
-    }
-
-    #menu a.active_Outdoor_Adventure {
-        background-color: rgb(0, 102, 0);
-        color: #ffffff;
-    }
-
-    #menu a.active_Luxury {
-        background-color: rgb(218,165,32);
+        background-color: rgb(0,102,0);
         color: #ffffff;
     }
 
@@ -86,10 +76,10 @@ var map = new mapboxgl.Map({
     center: [-90.5, 38.4]
 });
 
-var gradients = [0.3, 0.45, 0.75,  0.9];
-var cluster_sizes = [40, 60, 80,  100];
-var cluster_breaks = [0, 30, 100, 200];
-var blur_ratios = [0.9, 0.8, 0.7, 0.6];
+var gradients = [.3, .3, .7]
+var cluster_sizes = [10, 30, 90]
+var cluster_breaks = [0, 30, 100]
+var blur_ratio = 0.75
 
 map.on('load', function () {
       map.addSource("family_edu", {
@@ -112,8 +102,7 @@ map.on('load', function () {
       var layers = [
           [cluster_breaks[0], "rgba(0, 0, 255," + gradients[0] + ")", cluster_sizes[0]],
           [cluster_breaks[1], "rgba(0, 0, 255," + gradients[1] + ")", cluster_sizes[1]],
-          [cluster_breaks[2], "rgba(0, 0, 255," + gradients[2] + ")", cluster_sizes[2]],
-          [cluster_breaks[3], "rgba(0, 0, 255," + gradients[3] + ")", cluster_sizes[3]]
+          [cluster_breaks[2], "rgba(0, 0, 255," + gradients[2] + ")", cluster_sizes[2]]
       ];
 
       layers.forEach(function (layer, i) {
@@ -125,7 +114,7 @@ map.on('load', function () {
               "paint": {
                   "circle-color": layer[1],
                   "circle-radius": layer[2],
-                  "circle-blur": blur_ratios[i] // blur the circles to get a heatmap look
+                  "circle-blur": blur_ratio // blur the circles to get a heatmap look
               },
               "filter": i === layers.length - 1 ?
               [">=", "point_count", layer[0]] :
@@ -156,8 +145,7 @@ map.on('load', function () {
       var layers = [
           [cluster_breaks[0], "rgba(0, 204, 204," + gradients[0] + ")", cluster_sizes[0]],
           [cluster_breaks[1], "rgba(0, 204, 204," + gradients[1] + ")", cluster_sizes[1]],
-          [cluster_breaks[2], "rgba(0, 204, 204," + gradients[2] + ")", cluster_sizes[2]],
-          [cluster_breaks[3], "rgba(0, 204, 204," + gradients[3] + ")", cluster_sizes[3]]
+          [cluster_breaks[2], "rgba(0, 204, 204," + gradients[2] + ")", cluster_sizes[2]]
       ];
 
       layers.forEach(function (layer, i) {
@@ -169,7 +157,7 @@ map.on('load', function () {
               "paint": {
                   "circle-color": layer[1],
                   "circle-radius": layer[2],
-                  "circle-blur": blur_ratios[i] // blur the circles to get a heatmap look
+                  "circle-blur": blur_ratio // blur the circles to get a heatmap look
               },
               "filter": i === layers.length - 1 ?
               [">=", "point_count", layer[0]] :
@@ -181,67 +169,14 @@ map.on('load', function () {
 
 
 
-      map.addSource("outdoor_nature", {
+      map.addSource("outdoors", {
           type: "geojson",
           // Point to GeoJSON data. This example generates a heatmap for
           // all addresses in San Juan County, WA.
           // Find the addresses dataset at http://data.sjcgis.org/.
           // The URL is copied from the GeoJSON box under Full Dataset in
           // the API button.
-          data: {{ outdoor_nature_geojson|safe }},
-          cluster: true,
-          clusterMaxZoom: 11, // Max zoom to cluster points on
-          clusterRadius: 30 // Radius of each cluster when clustering points (defaults to 50)
-      });
-
-      // Use the addresses source to create four layers:
-      // three for each cluster category, and one for unclustered points
-
-      // Each point range gets a different fill color.
-      var layers = [
-          [cluster_breaks[0], "rgba(102, 51, 0," + gradients[0] + ")", cluster_sizes[0]],
-          [cluster_breaks[1], "rgba(102, 51, 0," + gradients[1] + ")", cluster_sizes[1]],
-          [cluster_breaks[2], "rgba(102, 51, 0," + gradients[2] + ")", cluster_sizes[2]],
-          [cluster_breaks[3], "rgba(102, 51, 0," + gradients[3] + ")", cluster_sizes[3]]
-      ];
-
-      layers.forEach(function (layer, i) {
-          map.addLayer({
-              "id": "outdoor_nature-" + i,
-              "type": "circle",
-              "source": "outdoor_nature",
-              "layout": {"visibility": "none"},
-              "paint": {
-                  "circle-color": layer[1],
-                  "circle-radius": layer[2],
-                  "circle-blur": blur_ratios[i] // blur the circles to get a heatmap look
-              },
-              "filter": i === layers.length - 1 ?
-              [">=", "point_count", layer[0]] :
-              ["all",
-               [">=", "point_count", layer[0]],
-               ["<", "point_count", layers[i + 1][0]]]
-          }, 'waterway-label');
-      });
-
-      console.log("nature");
-
-
-
-
-
-
-
-
-
-      map.addSource("outdoor_adventure", {
-          type: "geojson",
-          // Point to GeoJSON data. This example generates a heatmap for
-          // all addresses in San Juan County, WA.
-          // Find the addresses dataset at http://data.sjcgis.org/.
-          // The URL is copied from the GeoJSON box under Full Dataset in
-          // the API button.
-          data: {{ outdoor_adventure_geojson|safe }},
+          data: {{ outdoors_geojson|safe }},
           cluster: true,
           clusterMaxZoom: 11, // Max zoom to cluster points on
           clusterRadius: 30 // Radius of each cluster when clustering points (defaults to 50)
@@ -254,20 +189,19 @@ map.on('load', function () {
       var layers = [
           [cluster_breaks[0], "rgba(0, 102, 0," + gradients[0] + ")", cluster_sizes[0]],
           [cluster_breaks[1], "rgba(0, 102, 0," + gradients[1] + ")", cluster_sizes[1]],
-          [cluster_breaks[2], "rgba(0, 102, 0," + gradients[2] + ")", cluster_sizes[2]],
-          [cluster_breaks[3], "rgba(0, 102, 0," + gradients[3] + ")", cluster_sizes[3]]
+          [cluster_breaks[2], "rgba(0, 102, 0," + gradients[2] + ")", cluster_sizes[2]]
       ];
 
       layers.forEach(function (layer, i) {
           map.addLayer({
-              "id": "outdoor_adventure-" + i,
+              "id": "outdoors-" + i,
               "type": "circle",
-              "source": "outdoor_adventure",
+              "source": "outdoors",
               "layout": {"visibility": "none"},
               "paint": {
                   "circle-color": layer[1],
                   "circle-radius": layer[2],
-                  "circle-blur": blur_ratios[i] // blur the circles to get a heatmap look
+                  "circle-blur": blur_ratio // blur the circles to get a heatmap look
               },
               "filter": i === layers.length - 1 ?
               [">=", "point_count", layer[0]] :
@@ -276,106 +210,14 @@ map.on('load', function () {
                ["<", "point_count", layers[i + 1][0]]]
           }, 'waterway-label');
       });
-
-
-
-      console.log("adventure");
-
-
-
-
-
-
-
-
-
-
-
-
-      map.addSource("luxury", {
-          type: "geojson",
-          // Point to GeoJSON data. This example generates a heatmap for
-          // all addresses in San Juan County, WA.
-          // Find the addresses dataset at http://data.sjcgis.org/.
-          // The URL is copied from the GeoJSON box under Full Dataset in
-          // the API button.
-          data: {{ luxury_geojson|safe }},
-          cluster: true,
-          clusterMaxZoom: 11, // Max zoom to cluster points on
-          clusterRadius: 30 // Radius of each cluster when clustering points (defaults to 50)
-      });
-
-      // Use the addresses source to create four layers:
-      // three for each cluster category, and one for unclustered points
-
-      // Each point range gets a different fill color.
-      var layers = [
-          [cluster_breaks[0], "rgba(218,165,32," + gradients[0] + ")", cluster_sizes[0]],
-          [cluster_breaks[1], "rgba(218,165,32," + gradients[1] + ")", cluster_sizes[1]],
-          [cluster_breaks[2], "rgba(218,165,32," + gradients[2] + ")", cluster_sizes[2]],
-          [cluster_breaks[3], "rgba(218,165,32," + gradients[3] + ")", cluster_sizes[3]]
-      ];
-
-      layers.forEach(function (layer, i) {
-          map.addLayer({
-              "id": "luxury-" + i,
-              "type": "circle",
-              "source": "luxury",
-              "layout": {"visibility": "none"},
-              "paint": {
-                  "circle-color": layer[1],
-                  "circle-radius": layer[2],
-                  "circle-blur": blur_ratios[i] // blur the circles to get a heatmap look
-              },
-              "filter": i === layers.length - 1 ?
-              [">=", "point_count", layer[0]] :
-              ["all",
-               [">=", "point_count", layer[0]],
-               ["<", "point_count", layers[i + 1][0]]]
-          }, 'waterway-label');
-      });
-
-
-
-
-
-
-
-
-      console.log("luxury");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 });
 
 var toggleableLayerIds = [ 'family-0', 'family-1','family-2',  'outdoors-0', 'outdoors-1','outdoors-2' ];
-var groups = {'Family_Education': [ 'family_edu-0', 'family_edu-1','family_edu-2', 'family_edu-3'],
-              'Family_Fun': [ 'family_fun-0', 'family_fun-1','family_fun-2', 'family_fun-3'],
-              'Outdoor_Nature':[ 'outdoor_nature-0', 'outdoor_nature-1','outdoor_nature-2', 'outdoor_nature-3'],
-              'Outdoor_Adventure':[ 'outdoor_adventure-0', 'outdoor_adventure-1','outdoor_adventure-2', 'outdoor_adventure-3'],
-              'Luxury':[ 'luxury-0', 'luxury-1','luxury-2', 'luxury-3']}
+var groups = {'Family_Education': [ 'family_edu-0', 'family_edu-1','family_edu-2'],
+              'Family_Fun': [ 'family_fun-0', 'family_fun-1','family_fun-2'],
+              'Outdoor_Nature':[ 'outdoors-0', 'outdoors-1','outdoors-2'] }
 
 
 Object.keys(groups).forEach( function (group_key) {
