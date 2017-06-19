@@ -68,4 +68,4 @@ def heatmap_all():
 #             time.sleep(2)
 #       return Response(generate(), mimetype='text/event-stream')
 
-app.run(threaded=True)
+app.run(threaded=True, host='0.0.0.0')
